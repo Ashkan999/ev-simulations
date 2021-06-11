@@ -23,11 +23,12 @@ public class UniformDistribution extends UniformIntegerDistribution implements P
         return arrivalTimes;
     }
 
-    public int[] initDeadlines(int numVehicles) {
-        deadlines = new int[numVehicles];
+    public int[] initDeadlines(int[] arrivalTimes) {
+        deadlines = new int[arrivalTimes.length];
 
-        for(int i = 0; i < numVehicles; i++) {
-            deadlines[i] = this.sample();
+        for(int i = 0; i < deadlines.length; i++) {
+            UniformIntegerDistribution uni = new UniformIntegerDistribution(arrivalTimes[i], getSupportUpperBound());
+            deadlines[i] = uni.sample();
         }
 
         return deadlines;

@@ -34,7 +34,7 @@ public class Runner { //make static?
     public static final ProbabilityDistribution ARRIVALS_DISTRIBUTION = new NormalDistribution(10.0 / SIMULATION_DURATION * TOTAL_STEPS, 3.0);
 //    public static final ProbabilityDistribution ARRIVALS_DISTRIBUTION = new PoissonDistribution(1.0);
 
-    public static final UniformDistribution DEADLINES_DISTRIBUTION = new UniformDistribution(1, TOTAL_STEPS); //TODO: fix deadline before arrival time
+    public static final UniformDistribution DEADLINES_DISTRIBUTION = new UniformDistribution(1, TOTAL_STEPS); //only upperbound matters here
     //TODO: create normal deadline distro (using papers)
 
     public static final String RESULTS_DIR = "./results";
@@ -45,6 +45,7 @@ public class Runner { //make static?
 
         ResultsCollection results = new ResultsCollection();
 
+        //----Scheduling Algorithms----
         LinkedList<ChargingStation> schedulingAlgos = new LinkedList<>();
         schedulingAlgos.add(new FirstComeFirstServe(STATION_CAPACITY));
         schedulingAlgos.add(new EarliestDeadlineFirst(STATION_CAPACITY));
@@ -63,10 +64,11 @@ public class Runner { //make static?
                 cs.reset();
 
                 int[] arrivalTimes = ARRIVALS_DISTRIBUTION.initArrivalTimes(NUMBER_EVS);
-                int[] deadlines = DEADLINES_DISTRIBUTION.initDeadlines(NUMBER_EVS);
+                int[] deadlines = DEADLINES_DISTRIBUTION.initDeadlines(arrivalTimes);
 
                 ArrayList<Vehicle> vehicles = new ArrayList<>();
                 for(int i = 0; i < arrivalTimes.length; i++) { //or use num_vehicles and make sure enough arrivalTimes are created
+//                    int deadline =
                     vehicles.add(new Vehicle(i, VEHICLE_MAX_CHARGE, arrivalTimes[i], deadlines[i]));
 //                    vehicles.add(new Vehicle(i, VEHICLE_MAX_CHARGE, arrivalTimes[i], DEADLINES_DISTRIBUTION));
 
