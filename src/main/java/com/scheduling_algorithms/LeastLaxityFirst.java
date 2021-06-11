@@ -5,31 +5,31 @@ import com.classes.Vehicle;
 
 import java.util.*;
 
-public class LeastLaxityFirst implements ChargingStation {
+public class LeastLaxityFirst extends ChargingStation {
 
-    private int capacity;
-    private String name = "LLF";
-    private TreeSet<Vehicle> waitingQueue;
+//    private int capacity;
+//    private String name = "LLF";
+//    private TreeSet<Vehicle> waitingQueue;
     private SortByLaxity sortByLaxity = new SortByLaxity();
 
     public LeastLaxityFirst(int capacity) {
-        this.capacity = capacity;
-        this.waitingQueue = new TreeSet<>(sortByLaxity);
+        super(capacity, "LLF", null);
+        setWaitingQueue(new TreeSet<>(sortByLaxity));
     }
 
     @Override
     public boolean enqueueVehicle(Vehicle vehicle, int time) {
         vehicle.setWaitingTime(time);
-        return waitingQueue.add(vehicle);
+        return getWaitingQueue().add(vehicle);
     }
 
     @Override
     public void chargeVehicles(int time) {
         sortByLaxity.setCurrentTime(time);
 
-        Iterator<Vehicle> itr = waitingQueue.iterator();
+        Iterator<Vehicle> itr = getWaitingQueue().iterator();
         int numCharging = 0;
-        while(itr.hasNext() && numCharging < capacity) {
+        while(itr.hasNext() && numCharging < getCapacity()) {
             Vehicle vehicle = itr.next();
             vehicle.charge();
             numCharging++;
@@ -43,17 +43,7 @@ public class LeastLaxityFirst implements ChargingStation {
     @Override
     public void reset() {
         sortByLaxity = new SortByLaxity();
-        this.waitingQueue = new TreeSet<>(sortByLaxity);
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public Collection<Vehicle> getWaitingQueue() {
-        return waitingQueue;
+        setWaitingQueue(new TreeSet<>(sortByLaxity));
     }
 
     @Override
@@ -63,7 +53,7 @@ public class LeastLaxityFirst implements ChargingStation {
 
     @Override
     public boolean allVehiclesCharged() {
-        return waitingQueue.size() == 0;
+        return getWaitingQueue().size() == 0;
     }
 
     class SortByLaxity implements Comparator<Vehicle> {

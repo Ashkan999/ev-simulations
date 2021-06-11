@@ -5,29 +5,23 @@ import com.classes.Vehicle;
 
 import java.util.*;
 
-public class EarliestDeadlineFirst implements ChargingStation {
+public class EarliestDeadlineFirst extends ChargingStation {
 
-    private int capacity;
-    private String name = "EDF";
-    private PriorityQueue<Vehicle> waitingQueue;
+//    private int capacity;
+//    private String name = "EDF";
+//    private PriorityQueue<Vehicle> waitingQueue;
     private LinkedList<Vehicle> chargingQueue;
 
     public EarliestDeadlineFirst(int capacity) {
-        this.capacity = capacity;
-        this.waitingQueue = new PriorityQueue<>(new SortByDeadline());
+        super(capacity, "EDF", new PriorityQueue<>(new SortByDeadline()));
         this.chargingQueue = new LinkedList<>();
-    }
-
-    @Override
-    public boolean enqueueVehicle(Vehicle vehicle, int time) {
-        vehicle.setWaitingTime(time);
-        return waitingQueue.add(vehicle);
+//        this.waitingQueue = new PriorityQueue<>(new SortByDeadline());
     }
 
     @Override
     public void chargeVehicles(int time) {
-        while(waitingQueue.size() > 0 && chargingQueue.size() < capacity) {
-            chargingQueue.add(waitingQueue.poll());
+        while(getWaitingQueue().size() > 0 && chargingQueue.size() < getCapacity()) {
+            chargingQueue.add(getWaitingQueue().poll());
         }
 
         Iterator<Vehicle> itr = chargingQueue.iterator();
@@ -41,13 +35,9 @@ public class EarliestDeadlineFirst implements ChargingStation {
         }
     }
 
-    public String getName() {
-        return name;
-    }
-
     @Override
-    public Collection<Vehicle> getWaitingQueue() {
-        return waitingQueue;
+    public PriorityQueue<Vehicle> getWaitingQueue() {
+        return (PriorityQueue<Vehicle>) super.getWaitingQueue();
     }
 
     @Override
@@ -57,12 +47,12 @@ public class EarliestDeadlineFirst implements ChargingStation {
 
     @Override
     public boolean allVehiclesCharged() {
-        return waitingQueue.size() == 0 && chargingQueue.size() == 0;
+        return getWaitingQueue().size() == 0 && chargingQueue.size() == 0;
     }
 
     @Override
     public void reset() {
-        this.waitingQueue = new PriorityQueue<>(new SortByDeadline());
+        setWaitingQueue(new PriorityQueue<>(new SortByDeadline()));
         this.chargingQueue = new LinkedList<>();
     }
 

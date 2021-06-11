@@ -5,28 +5,21 @@ import com.classes.Vehicle;
 
 import java.util.*;
 
-public class EarliestDeadlineFirstPreemptive implements ChargingStation {
+public class EarliestDeadlineFirstPreemptive extends ChargingStation {
 
-    private int capacity;
-    private String name = "EDF(pre)";
-    private TreeSet<Vehicle> waitingQueue;
+//    private int capacity;
+//    private String name = "EDF(pre)";
+//    private TreeSet<Vehicle> waitingQueue;
 
     public EarliestDeadlineFirstPreemptive(int capacity) {
-        this.capacity = capacity;
-        this.waitingQueue = new TreeSet<>(new EarliestDeadlineFirst.SortByDeadline());
-    }
-
-    @Override
-    public boolean enqueueVehicle(Vehicle vehicle, int time) {
-        vehicle.setWaitingTime(time);
-        return waitingQueue.add(vehicle);
+        super(capacity, "EDF(pre)", new TreeSet<>(new EarliestDeadlineFirst.SortByDeadline()));
     }
 
     @Override
     public void chargeVehicles(int time) {
-        Iterator<Vehicle> itr = waitingQueue.iterator();
+        Iterator<Vehicle> itr = getWaitingQueue().iterator();
         int numCharging = 0;
-        while(itr.hasNext() && numCharging < capacity) {
+        while(itr.hasNext() && numCharging < getCapacity()) {
             Vehicle vehicle = itr.next();
             vehicle.charge();
             numCharging++;
@@ -37,15 +30,6 @@ public class EarliestDeadlineFirstPreemptive implements ChargingStation {
         }
     }
 
-    public String getName() {
-        return name;
-    }
-
-    @Override
-    public TreeSet<Vehicle> getWaitingQueue() {
-        return waitingQueue;
-    }
-
     @Override
     public LinkedList<Vehicle> getChargingQueue() {
         return null;
@@ -53,11 +37,11 @@ public class EarliestDeadlineFirstPreemptive implements ChargingStation {
 
     @Override
     public boolean allVehiclesCharged() {
-        return waitingQueue.size() == 0;
+        return getWaitingQueue().size() == 0;
     }
 
     @Override
     public void reset() {
-        this.waitingQueue = new TreeSet<>(new EarliestDeadlineFirst.SortByDeadline());
+        setWaitingQueue(new TreeSet<>(new EarliestDeadlineFirst.SortByDeadline()));
     }
 }

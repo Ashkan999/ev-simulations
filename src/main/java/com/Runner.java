@@ -24,10 +24,10 @@ public class Runner { //make static?
     public static final int MINUTES_PER_STEP = 10;
     public static final int SIMULATION_DURATION = 24; //hours
     public static final int TOTAL_STEPS = SIMULATION_DURATION * 60 / MINUTES_PER_STEP;
-    public static final int NUMBER_ITERATIONS = 1;
+    public static final int NUMBER_ITERATIONS = 2000;
     public static final int STATION_CAPACITY = 1;
     public static final int VEHICLE_MAX_CHARGE = 6; //CHARGING_DURATION / MINUTES_PER_STEP
-    public static final int NUMBER_EVS = 50;
+    public static final int NUMBER_EVS = 60;
     public static final boolean VERBOSE = false;
 
 //    public static final ProbabilityDistribution ARRIVALS_DISTRIBUTION = new UniformDistribution(0, TOTAL_STEPS - 1); //bounds?
@@ -142,7 +142,7 @@ public class Runner { //make static?
 //Scheduling of queueing systems is what i am looking for
 
 //TODO:
-//look deeper into LLF and can laxity be negative?
+//look deeper into LLF and can laxity be negative? also check if it behaves correctly
 //check if results are correctly calculated for tardiness
 //create actual (poison, normal) distributions (not only for arrivals but also for deadlines bv)
 //start implementing actual algos

@@ -5,28 +5,23 @@ import com.classes.Vehicle;
 
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 
-public class FirstComeFirstServe implements ChargingStation {
+public class FirstComeFirstServe extends ChargingStation {
 
-    private int capacity;
-    private String name = "FCFS";
-    private LinkedList<Vehicle> waitingQueue;
+//    private int capacity;
+//    private String name = "FCFS";
+//    private LinkedList<Vehicle> waitingQueue;
     private LinkedList<Vehicle> chargingQueue;
 
     public FirstComeFirstServe(int capacity) {
-        this.capacity = capacity;
-        this.waitingQueue = new LinkedList<>();
+        super(capacity, "FCFS", new LinkedList<>());
         this.chargingQueue = new LinkedList<>();
     }
 
-    public boolean enqueueVehicle(Vehicle vehicle, int time) {
-        vehicle.setWaitingTime(time);
-        return waitingQueue.add(vehicle);
-    }
-
     public void chargeVehicles(int time) {
-        while(waitingQueue.size() > 0 && chargingQueue.size() < capacity) {
-            chargingQueue.add(waitingQueue.remove());
+        while(getWaitingQueue().size() > 0 && chargingQueue.size() < getCapacity()) {
+            chargingQueue.add(getWaitingQueue().remove(0));
         }
 
         Iterator<Vehicle> itr = chargingQueue.iterator();
@@ -42,16 +37,13 @@ public class FirstComeFirstServe implements ChargingStation {
 
     @Override
     public void reset() {
-        this.waitingQueue = new LinkedList<>();
+        setWaitingQueue(new LinkedList<>());
         this.chargingQueue = new LinkedList<>();
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public LinkedList<Vehicle> getWaitingQueue() {
-        return waitingQueue;
+    @Override
+    public List<Vehicle> getWaitingQueue() {
+        return (List<Vehicle>) super.getWaitingQueue();
     }
 
     public LinkedList<Vehicle> getChargingQueue() {
@@ -60,6 +52,6 @@ public class FirstComeFirstServe implements ChargingStation {
 
     @Override
     public boolean allVehiclesCharged() {
-        return waitingQueue.size() == 0 && chargingQueue.size() == 0;
+        return getWaitingQueue().size() == 0 && chargingQueue.size() == 0;
     }
 }
