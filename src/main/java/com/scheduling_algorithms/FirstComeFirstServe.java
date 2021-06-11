@@ -5,7 +5,6 @@ import com.classes.Vehicle;
 
 import java.util.Iterator;
 import java.util.LinkedList;
-import java.util.PriorityQueue;
 
 public class FirstComeFirstServe implements ChargingStation {
 
@@ -20,9 +19,9 @@ public class FirstComeFirstServe implements ChargingStation {
         this.chargingQueue = new LinkedList<>();
     }
 
-    public void enqueueVehicle(Vehicle vehicle, int time) {
+    public boolean enqueueVehicle(Vehicle vehicle, int time) {
         vehicle.setWaitingTime(time);
-        waitingQueue.add(vehicle);
+        return waitingQueue.add(vehicle);
     }
 
     public void chargeVehicles(int time) {
@@ -31,17 +30,14 @@ public class FirstComeFirstServe implements ChargingStation {
         }
 
         Iterator<Vehicle> itr = chargingQueue.iterator();
-//        System.out.println("time:" + time);
-//        System.out.println(chargingQueue);
         while(itr.hasNext()) {
             Vehicle vehicle = itr.next();
             vehicle.charge();
             if(vehicle.isFullyCharged()) {
-                vehicle.setWaitingTime(time - vehicle.getWaitingTime() + 1);
+                vehicle.depart(time);
                 itr.remove();
             }
         }
-//        System.out.println(chargingQueue);
     }
 
     @Override
@@ -52,5 +48,18 @@ public class FirstComeFirstServe implements ChargingStation {
 
     public String getName() {
         return name;
+    }
+
+    public LinkedList<Vehicle> getWaitingQueue() {
+        return waitingQueue;
+    }
+
+    public LinkedList<Vehicle> getChargingQueue() {
+        return chargingQueue;
+    }
+
+    @Override
+    public boolean allVehiclesCharged() {
+        return waitingQueue.size() == 0 && chargingQueue.size() == 0;
     }
 }

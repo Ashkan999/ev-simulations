@@ -5,7 +5,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.text.NumberFormat;
 import java.util.Calendar;
-import java.util.List;
 
 public class ResultsWriter {
 

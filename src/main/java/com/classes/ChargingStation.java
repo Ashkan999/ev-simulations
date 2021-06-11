@@ -1,8 +1,10 @@
 package com.classes;
 
+import java.util.Collection;
+
 public interface ChargingStation {
 
-    void enqueueVehicle(Vehicle vehicle, int time);
+    boolean enqueueVehicle(Vehicle vehicle, int time);
 
     void chargeVehicles(int time);
 
@@ -10,4 +12,9 @@ public interface ChargingStation {
 
     String getName();
 
+    Collection<Vehicle> getWaitingQueue();
+
+    Collection<Vehicle> getChargingQueue();
+
+    boolean allVehiclesCharged();
 }
