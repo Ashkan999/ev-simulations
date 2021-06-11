@@ -24,10 +24,10 @@ public class Runner { //make static?
     public static final int MINUTES_PER_STEP = 10;
     public static final int SIMULATION_DURATION = 24; //hours
     public static final int TOTAL_STEPS = SIMULATION_DURATION * 60 / MINUTES_PER_STEP;
-    public static final int NUMBER_ITERATIONS = 2000;
+    public static final int NUMBER_ITERATIONS = 1;
     public static final int STATION_CAPACITY = 1;
     public static final int VEHICLE_MAX_CHARGE = 6; //CHARGING_DURATION / MINUTES_PER_STEP
-    public static final int NUMBER_EVS = 60;
+    public static final int NUMBER_EVS = 50;
     public static final boolean VERBOSE = false;
 
 //    public static final ProbabilityDistribution ARRIVALS_DISTRIBUTION = new UniformDistribution(0, TOTAL_STEPS - 1); //bounds?
@@ -102,8 +102,6 @@ public class Runner { //make static?
                     currStep++;
                 }
 
-                if(VERBOSE) System.out.println("total arrived: " + countArrivals);
-
                 //check how many vehicles not full yet
                 int countFulls = 0;
                 for(Vehicle v : vehicles) {
@@ -112,17 +110,20 @@ public class Runner { //make static?
                     }
                 }
 
-                if(VERBOSE) System.out.println(countArrivals + " out of " + vehicles.size() + " arrived");
-                if(VERBOSE) System.out.println(countFulls + " out of " + countArrivals + " fully charged");
-                if(VERBOSE) System.out.println("waitingQ size " + cs.getWaitingQueue().size());
-                if(VERBOSE) System.out.println("waitingQ " + cs.getWaitingQueue().toString());
-                if(VERBOSE && cs.getChargingQueue() != null) System.out.println("chargingQ " + cs.getChargingQueue().size());
+                if(VERBOSE) {
+                    System.out.println("total actually arrived: " + countArrivals);
+                    System.out.println(countArrivals + " out of " + vehicles.size() + " arrived");
+                    System.out.println(countFulls + " out of " + countArrivals + " fully charged");
+                    System.out.println("still remaining in WQ: " + cs.getWaitingQueue().size());
+                    System.out.println("waitingQ: " + cs.getWaitingQueue().toString());
+                    if(cs.getChargingQueue() != null) System.out.println("chargingQ: " + cs.getChargingQueue());
+                }
 
                 assert (countArrivals == vehicles.size());
                 assert (countFulls == countArrivals);
 
-                results.addWaitingTimeResults(cs.getName(), vehicles, currIteration);
-                results.addTardinessResults(cs.getName(), vehicles, currIteration);
+                results.addWaitingTimeResults(cs.getName(), vehicles);
+                results.addTardinessResults(cs.getName(), vehicles);
 
                 currIteration++;
             }
@@ -145,7 +146,7 @@ public class Runner { //make static?
 //check if results are correctly calculated for tardiness
 //create actual (poison, normal) distributions (not only for arrivals but also for deadlines bv)
 //start implementing actual algos
-//should sim stop at end of day or untill all vehicles have been charged? look RP doc for answer
+//should sim stop at end of day or untill all vehicles have been charged? - look RP doc for answer
 //IDEA if deadlines or other sorting criterium is equal, then charge shortest job first
 
 //make params(#vehicles, ) more advanced

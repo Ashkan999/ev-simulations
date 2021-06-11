@@ -2,6 +2,7 @@ package com.results;
 
 import com.Runner;
 import com.classes.Vehicle;
+import org.apache.commons.math3.stat.StatUtils;
 
 import java.util.*;
 
@@ -17,54 +18,41 @@ public class ResultsCollection {
         results.put("#iterations", (double) Runner.NUMBER_ITERATIONS);
     }
 
-    public void addWaitingTimeResults(String algoName, List<Vehicle> vehicles, int currIteration) {
-        double totalWaitingTime = 0.0;
-        for(Vehicle v : vehicles) {
-            totalWaitingTime += v.getWaitingTime();
-            if(Runner.VERBOSE) System.out.println("EV " + v.getId() + " waiting-time: " + v.getWaitingTime());
-//            System.out.println("waiting time - " + v.getId() + " " + v.getWaitingTime());
-//            System.out.println("total " + totalWaitingTime);
+    public void addWaitingTimeResults(String algoName, List<Vehicle> vehicles) {
+        double[] waitingTimes = new double[vehicles.size()];
+        for(int i = 0; i < vehicles.size(); i++) {
+            waitingTimes[i] = vehicles.get(i).getWaitingTime();
         }
 
-        double avgWaitingTime = totalWaitingTime / vehicles.size() * Runner.MINUTES_PER_STEP / Runner.NUMBER_ITERATIONS;
-//        System.out.println("avg " + avgWaitingTime);
+        double avgWaitingTime = StatUtils.mean(waitingTimes);
+
+        avgWaitingTime *= Runner.MINUTES_PER_STEP / Runner.NUMBER_ITERATIONS;
 
         String key = algoName + "_waiting_time";
 
         results.put(key, (results.getOrDefault(key, 0.0) + avgWaitingTime));
-//        System.out.println("final avg waitingTime: " + results.get(key));
     }
 
-    public void addTardinessResults(String algoName, List<Vehicle> vehicles, int currIteration) {
-        double maxTardiness = 0.0;
-        double totalTardiness = 0.0;
-        for(Vehicle v : vehicles) {
-            int vehicleTardiness = v.getFinishTime() - v.getDeadline();
-            if(vehicleTardiness > maxTardiness) {
-                maxTardiness = vehicleTardiness;
-            }
-            totalTardiness += Math.max(0.0, vehicleTardiness);
+    public void addTardinessResults(String algoName, List<Vehicle> vehicles) {
+        double[] delays = new double[vehicles.size()];
+        for(int i = 0; i < vehicles.size(); i++) {
+            delays[i] = vehicles.get(i).getTardiness();
         }
 
-        maxTardiness = maxTardiness * Runner.MINUTES_PER_STEP;
+        double maxTardiness = StatUtils.max(delays);
+        double avgTardiness = StatUtils.mean(delays);
 
         String key = algoName + "_max_tardiness";
 
-        results.put(key, Math.max(maxTardiness, results.getOrDefault(key, 0.0)));
+        maxTardiness *= Runner.MINUTES_PER_STEP;
 
-        double avgTardiness = totalTardiness / vehicles.size() * Runner.MINUTES_PER_STEP / Runner.NUMBER_ITERATIONS;
+        results.put(key, Math.max(maxTardiness, results.getOrDefault(key, 0.0)));
 
         key = algoName + "_avg_tardiness";
 
-        results.put(key, results.getOrDefault(key, 0.0) + avgTardiness);
+        avgTardiness *= Runner.MINUTES_PER_STEP / Runner.NUMBER_ITERATIONS;
 
-//        double[] delays = new double[vehicles.size()];
-//        for(int i = 0; i < vehicles.size(); i++) {
-//            Vehicle v = vehicles.get(i);
-//            delays[i] = Math.max(0, v.getFinishTime() - v.getDeadline());
-//        }
-//
-//        StatUtils.mean(delays)
+        results.put(key, results.getOrDefault(key, 0.0) + avgTardiness);
     }
 
     @Override

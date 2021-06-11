@@ -105,6 +105,16 @@ public class Vehicle {
         return deadline - endTime; //return Math.max(0, deadline - endTime);??
     }
 
+    /**
+     * Returns the tardiness of the vehicle, defined as tardiness = max(0, finishTime - deadline).
+     * Note: tardiness (as opposed to lateness) is non-negative.
+     *
+     * @return tardiness of the vehicle.
+     */
+    public int getTardiness() {
+        return Math.max(0, finishTime - deadline);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
