@@ -9,13 +9,15 @@ import java.util.List;
 
 public class FirstComeFirstServe extends ChargingStation {
 
-//    private int capacity;
-//    private String name = "FCFS";
-//    private LinkedList<Vehicle> waitingQueue;
     private LinkedList<Vehicle> chargingQueue;
 
     public FirstComeFirstServe(int capacity) {
         super(capacity, "FCFS", new LinkedList<>());
+        this.chargingQueue = new LinkedList<>();
+    }
+
+    public FirstComeFirstServe(int capacity, String name) {
+        super(capacity, name, new LinkedList<>());
         this.chargingQueue = new LinkedList<>();
     }
 

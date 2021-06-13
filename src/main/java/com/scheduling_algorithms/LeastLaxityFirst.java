@@ -7,9 +7,6 @@ import java.util.*;
 
 public class LeastLaxityFirst extends ChargingStation {
 
-//    private int capacity;
-//    private String name = "LLF";
-//    private TreeSet<Vehicle> waitingQueue;
     private SortByLaxity sortByLaxity = new SortByLaxity();
 
     public LeastLaxityFirst(int capacity) {

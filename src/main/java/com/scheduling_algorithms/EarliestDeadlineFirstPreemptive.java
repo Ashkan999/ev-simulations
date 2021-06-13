@@ -7,10 +7,6 @@ import java.util.*;
 
 public class EarliestDeadlineFirstPreemptive extends ChargingStation {
 
-//    private int capacity;
-//    private String name = "EDF(pre)";
-//    private TreeSet<Vehicle> waitingQueue;
-
     public EarliestDeadlineFirstPreemptive(int capacity) {
         super(capacity, "EDF(pre)", new TreeSet<>(new EarliestDeadlineFirst.SortByDeadline()));
     }

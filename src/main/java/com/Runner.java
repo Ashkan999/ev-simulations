@@ -8,10 +8,7 @@ import com.distributions.UniformDistribution;
 import com.results.ResultsCollection;
 import com.results.ResultsWriter;
 import com.classes.Vehicle;
-import com.scheduling_algorithms.EarliestDeadlineFirst;
-import com.scheduling_algorithms.EarliestDeadlineFirstPreemptive;
-import com.scheduling_algorithms.FirstComeFirstServe;
-import com.scheduling_algorithms.LeastLaxityFirst;
+import com.scheduling_algorithms.*;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -21,13 +18,13 @@ public class Runner { //make static?
 
     //----START SIMULATION PARAMETERS----
 
+    public static final int NUMBER_ITERATIONS = 2000;
+    public static final int NUMBER_EVS = 50;
+    public static final int STATION_CAPACITY = 1;
+    public static final int VEHICLE_MAX_CHARGE = 6; //CHARGING_DURATION / MINUTES_PER_STEP
     public static final int MINUTES_PER_STEP = 10;
     public static final int SIMULATION_DURATION = 24; //hours
     public static final int TOTAL_STEPS = SIMULATION_DURATION * 60 / MINUTES_PER_STEP;
-    public static final int NUMBER_ITERATIONS = 2000;
-    public static final int STATION_CAPACITY = 1;
-    public static final int VEHICLE_MAX_CHARGE = 6; //CHARGING_DURATION / MINUTES_PER_STEP
-    public static final int NUMBER_EVS = 60;
     public static final boolean VERBOSE = false;
 
 //    public static final ProbabilityDistribution ARRIVALS_DISTRIBUTION = new UniformDistribution(0, TOTAL_STEPS - 1); //bounds?
@@ -48,6 +45,8 @@ public class Runner { //make static?
         //----Scheduling Algorithms----
         LinkedList<ChargingStation> schedulingAlgos = new LinkedList<>();
         schedulingAlgos.add(new FirstComeFirstServe(STATION_CAPACITY));
+        schedulingAlgos.add(new FirstComeFirstServe(Integer.MAX_VALUE/2, "OPT"));
+        schedulingAlgos.add(new ShortestJobFirst(STATION_CAPACITY));
         schedulingAlgos.add(new EarliestDeadlineFirst(STATION_CAPACITY));
         schedulingAlgos.add(new EarliestDeadlineFirstPreemptive(STATION_CAPACITY));
         schedulingAlgos.add(new LeastLaxityFirst(STATION_CAPACITY));
@@ -130,7 +129,7 @@ public class Runner { //make static?
         }
 
         try {
-            ResultsWriter.writeToFile(results, RESULTS_DIR, "test");
+            ResultsWriter.writeToFile(results, RESULTS_DIR, "sim");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -138,8 +137,8 @@ public class Runner { //make static?
 }
 
 
-//Things to figure out:
-//Scheduling of queueing systems is what i am looking for
+//OVERWEEG PRECOMMITMENT / ADMISSION CONTROL
+//OVERWEEG UTILITY
 
 //TODO:
 //look deeper into LLF and can laxity be negative? also check if it behaves correctly
@@ -148,9 +147,9 @@ public class Runner { //make static?
 //start implementing actual algos
 //should sim stop at end of day or untill all vehicles have been charged? - look RP doc for answer
 //IDEA if deadlines or other sorting criterium is equal, then charge shortest job first
+//run sim on higher cs capacity
 
 //make params(#vehicles, ) more advanced
-//create optimal algo
 
 
 //| #Scap | #EVs | ... | day | FCFS_waiting_time | FCFS_max_delay | EDF_waiting_time | EDF_max_delay |

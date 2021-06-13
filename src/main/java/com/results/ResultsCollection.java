@@ -12,10 +12,17 @@ public class ResultsCollection {
 
     public ResultsCollection() {
         results = new HashMap<>();
-        results.put("#EVs", (double) Runner.NUMBER_EVS); // add the other params of Runner
+        results.put("num_iterations", (double) Runner.NUMBER_ITERATIONS);
+        results.put("num_EVs", (double) Runner.NUMBER_EVS); // add the other params of Runner
         results.put("station_capacity", (double) Runner.STATION_CAPACITY);
         results.put("minutes_step", (double) Runner.MINUTES_PER_STEP);
-        results.put("#iterations", (double) Runner.NUMBER_ITERATIONS);
+        results.put("sim_duration", (double) Runner.SIMULATION_DURATION);
+        results.put("max_charge", (double) Runner.VEHICLE_MAX_CHARGE);
+        System.out.println(Runner.ARRIVALS_DISTRIBUTION.toString());
+//        switch(Runner.ARRIVALS_DISTRIBUTION.getClass()) {
+//
+//        }
+//        results.put("arrival_dist", (double) Runner.ARRIVALS_DISTRIBUTION.); //TODO
     }
 
     public void addWaitingTimeResults(String algoName, List<Vehicle> vehicles) {
@@ -26,7 +33,7 @@ public class ResultsCollection {
 
         double avgWaitingTime = StatUtils.mean(waitingTimes);
 
-        avgWaitingTime *= Runner.MINUTES_PER_STEP / Runner.NUMBER_ITERATIONS;
+        avgWaitingTime *= (double) Runner.MINUTES_PER_STEP / Runner.NUMBER_ITERATIONS;
 
         String key = algoName + "_waiting_time";
 
@@ -50,7 +57,7 @@ public class ResultsCollection {
 
         key = algoName + "_avg_tardiness";
 
-        avgTardiness *= Runner.MINUTES_PER_STEP / Runner.NUMBER_ITERATIONS;
+        avgTardiness *= (double) Runner.MINUTES_PER_STEP / Runner.NUMBER_ITERATIONS;
 
         results.put(key, results.getOrDefault(key, 0.0) + avgTardiness);
     }
