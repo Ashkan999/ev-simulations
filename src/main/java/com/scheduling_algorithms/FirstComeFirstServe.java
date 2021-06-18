@@ -53,7 +53,7 @@ public class FirstComeFirstServe extends ChargingStation {
     }
 
     @Override
-    public boolean allVehiclesCharged() {
-        return getWaitingQueue().size() == 0 && chargingQueue.size() == 0;
+    public boolean vehiclesInQueue() {
+        return getWaitingQueue().size() > 0 || chargingQueue.size() > 0;
     }
 }

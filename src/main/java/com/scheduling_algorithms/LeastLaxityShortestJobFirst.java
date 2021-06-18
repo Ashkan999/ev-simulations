@@ -3,27 +3,24 @@ package com.scheduling_algorithms;
 import com.classes.ChargingStation;
 import com.classes.Vehicle;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.Iterator;
+import java.util.TreeSet;
 
 //Preemptive
-public class LeastLaxityFirst extends ChargingStation {
+public class LeastLaxityShortestJobFirst extends ChargingStation {
 
-    private SortByLaxity sortByLaxity = new SortByLaxity();
+    private LeastLaxityShortestJobComparator LLSJcomparator = new LeastLaxityShortestJobComparator();
 
-    public LeastLaxityFirst(int capacity) {
-        super(capacity, "LLF", null);
-        setWaitingQueue(new TreeSet<>(sortByLaxity));
-    }
-
-    @Override
-    public boolean enqueueVehicle(Vehicle vehicle, int time) {
-        vehicle.setWaitingTime(time);
-        return getWaitingQueue().add(vehicle);
+    public LeastLaxityShortestJobFirst(int capacity) {
+        super(capacity, "LLSJF", null);
+        setWaitingQueue(new TreeSet<>(LLSJcomparator));
     }
 
     @Override
     public void chargeVehicles(int time) {
-        sortByLaxity.setCurrentTime(time);
+        LLSJcomparator.setCurrentTime(time);
 
         Iterator<Vehicle> itr = getWaitingQueue().iterator();
         int numCharging = 0;
@@ -40,8 +37,8 @@ public class LeastLaxityFirst extends ChargingStation {
 
     @Override
     public void reset() {
-        sortByLaxity = new SortByLaxity();
-        setWaitingQueue(new TreeSet<>(sortByLaxity));
+        LLSJcomparator = new LeastLaxityShortestJobComparator();
+        setWaitingQueue(new TreeSet<>(LLSJcomparator));
     }
 
     @Override
@@ -54,17 +51,21 @@ public class LeastLaxityFirst extends ChargingStation {
         return getWaitingQueue().size() > 0;
     }
 
-    class SortByLaxity implements Comparator<Vehicle> {
+    class LeastLaxityShortestJobComparator implements Comparator<Vehicle> {
 
         private int currentTime;
 
         @Override
-        public int compare(Vehicle o1, Vehicle o2) {
-            int compare = o1.getLaxity(currentTime) - o2.getLaxity(currentTime);
+        public int compare(Vehicle v1, Vehicle v2) {
+            int compare = v1.getLaxity(currentTime) - v2.getLaxity(currentTime);
             if(compare != 0) {
                 return compare;
             }
-            return o1.getId() - o2.getId(); //TODO: ipv on id sort on shortest remaining time bv
+            compare = v1.getMaxCharge() - v1.getStateOfCharge() - (v2.getMaxCharge() - v2.getStateOfCharge());
+            if(compare != 0) {
+                return compare;
+            }
+            return v1.getId() - v2.getId();
         }
 
         public void setCurrentTime(int currentTime) {

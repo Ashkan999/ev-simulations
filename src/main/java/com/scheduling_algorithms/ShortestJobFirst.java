@@ -48,15 +48,19 @@ public class ShortestJobFirst extends ChargingStation {
     }
 
     @Override
-    public boolean allVehiclesCharged() {
-        return getWaitingQueue().size() == 0 && chargingQueue.size() == 0;
+    public boolean vehiclesInQueue() {
+        return getWaitingQueue().size() > 0 || chargingQueue.size() > 0;
     }
 
     static class SortByChargeTime implements Comparator<Vehicle> {
 
         @Override
         public int compare(Vehicle v1, Vehicle v2) {
-            return v1.getMaxCharge() - v1.getStateOfCharge() - (v2.getMaxCharge() - v2.getStateOfCharge());
+            int compare = v1.getMaxCharge() - v1.getStateOfCharge() - (v2.getMaxCharge() - v2.getStateOfCharge());
+            if(compare != 0) {
+                return compare;
+            }
+            return v1.getId() - v2.getId();
         }
     }
 }

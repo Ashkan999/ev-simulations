@@ -41,5 +41,5 @@ public abstract class ChargingStation {
 
     public abstract Collection<Vehicle> getChargingQueue();
 
-    public abstract boolean allVehiclesCharged();
+    public abstract boolean vehiclesInQueue();
 }

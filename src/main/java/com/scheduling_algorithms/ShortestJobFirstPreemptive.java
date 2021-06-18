@@ -3,12 +3,14 @@ package com.scheduling_algorithms;
 import com.classes.ChargingStation;
 import com.classes.Vehicle;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.TreeSet;
 
-public class EarliestDeadlineFirstPreemptive extends ChargingStation {
+public class ShortestJobFirstPreemptive extends ChargingStation {
 
-    public EarliestDeadlineFirstPreemptive(int capacity) {
-        super(capacity, "EDF(pre)", new TreeSet<>(new EarliestDeadlineFirst.SortByDeadline()));
+    public ShortestJobFirstPreemptive(int capacity) {
+        super(capacity, "SJF(pre)", new TreeSet<>(new ShortestJobFirst.SortByChargeTime()));
     }
 
     @Override
@@ -27,17 +29,17 @@ public class EarliestDeadlineFirstPreemptive extends ChargingStation {
     }
 
     @Override
-    public LinkedList<Vehicle> getChargingQueue() {
+    public void reset() {
+        setWaitingQueue(new TreeSet<>(new ShortestJobFirst.SortByChargeTime()));
+    }
+
+    @Override
+    public Collection<Vehicle> getChargingQueue() {
         return null;
     }
 
     @Override
     public boolean vehiclesInQueue() {
         return getWaitingQueue().size() > 0;
-    }
-
-    @Override
-    public void reset() {
-        setWaitingQueue(new TreeSet<>(new EarliestDeadlineFirst.SortByDeadline()));
     }
 }
