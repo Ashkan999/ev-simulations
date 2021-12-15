@@ -144,27 +144,3 @@ public class Runner { //make static?
         }
     }
 }
-
-//OVERWEEG PRECOMMITMENT / ADMISSION CONTROL
-//OVERWEEG UTILITY
-
-//TODO:
-//check if LLF schedules properly
-//create optimal offline algo to replace the current opt
-//look deeper into LLF and can laxity be negative? also check if it behaves correctly
-//check if results are correctly calculated for tardiness
-//create actual (poison, normal) distributions (not only for arrivals but also for deadlines bv)
-//start implementing actual algos
-//should sim stop at end of day or untill all vehicles have been charged? - look RP doc for answer
-//IDEA if deadlines or other sorting criterium is equal, then charge shortest job first
-//run sim on higher cs capacity
-//IDEA 
-
-//make params(#vehicles, ) more advanced
-
-
-//| #Scap | #EVs | ... | day | FCFS_waiting_time | FCFS_max_delay | EDF_waiting_time | EDF_max_delay |
-//|                    |  0  |
-//|                    |  1  |
-
-//| #days | #EVs | ... | FCFS_waiting_time | FCFS_max_delay | EDF_waiting_time | EDF_max_delay | <--!!
